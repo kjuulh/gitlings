@@ -4,9 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CliFx;
 using CliFx.Attributes;
-using CliFx.Exceptions;
 using CliFx.Infrastructure;
-using GitLings.Domain;
 
 namespace GitLings.Features.Exercises.Commands
 {
@@ -42,7 +40,7 @@ namespace GitLings.Features.Exercises.Commands
             }
 
             await console.Output.WriteLineAsync("Exercises");
-            foreach (var exercise in exerciseResult.Value)
+            foreach (var exercise in exerciseResult.Value.Select(e => e.exercise))
             {
                 await console.Output.WriteLineAsync($"{exercise.Number} - {exercise.Name}");
 

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using CliFx;
 using GitLings.Features.Exercises;
 using GitLings.Features.Exercises.Commands;
+using GitLings.Features.Exercises.ExerciseCreators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GitLings
@@ -11,7 +12,9 @@ namespace GitLings
     {
         private static IServiceProvider GetServiceProvider() =>
             new ServiceCollection()
+                .AddSingleton<CommittingToMasterExercise>()
                 .AddSingleton<IExercisesProvider, ExercisesProvider>()
+                .AddSingleton<IGitProvider, GitProvider>()
                 .AddTransient<ExercisesCommand>()
                 .AddTransient<RestartExercisesCommand>()
                 .AddTransient<StartExercisesCommand>()
