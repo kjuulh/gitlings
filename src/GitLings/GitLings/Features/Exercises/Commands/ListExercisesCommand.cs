@@ -40,7 +40,7 @@ namespace GitLings.Features.Exercises.Commands
             }
 
             await console.Output.WriteLineAsync("Exercises");
-            foreach (var exercise in exerciseResult.Value.Select(e => e.exercise))
+            foreach (var exercise in exerciseResult.Value.Select(e => e.exercise).OrderBy(e => e.Number))
             {
                 await console.Output.WriteLineAsync($"{exercise.Number} - {exercise.Name}");
 
@@ -54,7 +54,8 @@ namespace GitLings.Features.Exercises.Commands
                         else
                             await console.Output.WriteLineAsync($"  {line}");
                     }
-                await console.Output.WriteLineAsync();
+
+                    await console.Output.WriteLineAsync();
                 }
             }
         }

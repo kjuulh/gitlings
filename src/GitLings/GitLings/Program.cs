@@ -19,7 +19,6 @@ namespace GitLings
                 .AddSingleton<IExercisesProvider, ExercisesProvider>()
                 .AddSingleton<IGitProvider, GitProvider>()
                 .AddTransient<ExercisesCommand>()
-                .AddTransient<RestartExercisesCommand>()
                 .AddTransient<ExerciseHintsCommand>()
                 .AddTransient<StartExercisesCommand>()
                 .AddTransient<ExerciseSolutionCommand>()
