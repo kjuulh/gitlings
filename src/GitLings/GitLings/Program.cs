@@ -13,6 +13,7 @@ namespace GitLings
         private static IServiceProvider GetServiceProvider() =>
             new ServiceCollection()
                 .AddSingleton<IExerciseCreator,CommittingToMasterExercise>()
+                .AddSingleton<IExerciseCreator,UpstreamExercise>()
                 .AddSingleton<IExerciseCreator,ParkChangesExercise>()
                 .AddSingleton<IExerciseCreator,EditHistoryExercise>()
                 .AddSingleton<IExercisesProvider, ExercisesProvider>()
