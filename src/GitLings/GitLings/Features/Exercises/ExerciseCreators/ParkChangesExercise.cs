@@ -38,16 +38,18 @@ echo ""this file has a bug"" > file.txt
 
 git add file.txt && git commit -m ""Add file change""
 
-echo ""New work"" >> file.txt
+echo ""New work"" >> another-file.txt
 ");
             var file = "file.txt";
             var repo = new Repository($"{repositoryPath}/.git");
             using var fs = File.Create($"{repositoryPath}/{file}");
-            await fs.WriteAsync(Encoding.UTF8.GetBytes("Oh no, this file has a bug # BUG!!!!"));
+            await fs.WriteAsync(Encoding.UTF8.GetBytes("Oh no, this file has a bug # BUG!!!!\n"));
+            fs.Close();
             LibGit2Sharp.Commands.Stage(repo, file);
             var author = new Signature("Kasper Juul Hermansen", "contact@kjuulh.io", DateTimeOffset.Now.AddYears(3));
             repo.Commit("Add file change", author, author);
-            await fs.WriteAsync(Encoding.UTF8.GetBytes("Some very important change yes!"));
+            using var fs2 = File.Create($"{repositoryPath}/another-file.txt");
+            await fs2.WriteAsync(Encoding.UTF8.GetBytes("Some very important change yes!"));
             fs.Close();
         }
 
@@ -70,8 +72,8 @@ echo ""New work"" >> file.txt
             await console.Output.WriteLineAsync(@"
 ## Solution
 
-git add file.txt
-git stash -m ""This is my working changes""
+$ git add another-file.txt
+$ git stash -m ""This is my working changes""
 
 $ echo ""This file doesn't have a bug"" > file.txt
 $ git add file.txt 
