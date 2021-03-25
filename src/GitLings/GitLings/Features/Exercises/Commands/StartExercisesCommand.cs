@@ -1,11 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
-using GitLings.Features.Exercises.ExerciseCreators;
 
 namespace GitLings.Features.Exercises.Commands
 {
@@ -17,35 +17,43 @@ namespace GitLings.Features.Exercises.Commands
 
         private readonly IExercisesProvider _exercisesProvider;
         private readonly IGitProvider _gitProvider;
-        private readonly CommittingToMasterExercise _committingToMasterExercise;
+        private readonly IEnumerable<IExerciseCreator> _exerciseCreators;
 
         [CommandParameter(0, Name = "number")] public int Number { get; init; } = 1;
 
-        public StartExercisesCommand(IExercisesProvider exercisesProvider, IGitProvider gitProvider, CommittingToMasterExercise committingToMasterExercise)
+        public StartExercisesCommand(IExercisesProvider exercisesProvider, IGitProvider gitProvider, IEnumerable<IExerciseCreator> exerciseCreators)
         {
             _exercisesProvider = exercisesProvider;
             _gitProvider = gitProvider;
-            _committingToMasterExercise = committingToMasterExercise;
+            _exerciseCreators = exerciseCreators;
         }
 
         public async ValueTask ExecuteAsync(IConsole console)
         {
-            var path = Path ?? Environment.CurrentDirectory + "/exercises";
-            var exercise = await _exercisesProvider.GetExercise(path!, Number);
-            if (exercise.IsFailed)
+            var exercise = _exerciseCreators.FirstOrDefault(e => e.ExerciseOrder == Number);
+            if (exercise is null)
             {
-                await console.Output.WriteLineAsync(exercise.Errors.First().Message);
+                console.Output.WriteLine("Exercise could not be found by number");
+                return;
+            }
+            
+            var path = Path ?? Environment.CurrentDirectory + "/exercises";
+            var exerciseLocation = await _exercisesProvider.GetExercise(path!, Number);
+            if (exerciseLocation.IsFailed)
+            {
+                await console.Output.WriteLineAsync(exerciseLocation.Errors.First().Message);
                 return;
             }
 
-            var exercisePath = $"{exercise.Value.path}/exercise";
+            var exerciseLocationTuple = exerciseLocation.Value;
+            var exercisePath = $"{exerciseLocationTuple.path}/exercise";
             if (Directory.Exists(exercisePath))
                 Directory.Delete(exercisePath, true);
             
-            var output = _gitProvider.CreateRepository(exercise.Value.path);
+            var output = _gitProvider.CreateRepository(exerciseLocationTuple.path);
             await console.Output.WriteLineAsync($"Initialized exercise: {output}");
 
-            await _committingToMasterExercise.Create(exercisePath, console);
+            await exercise.Create(exercisePath, console);
         }
     }
 }
