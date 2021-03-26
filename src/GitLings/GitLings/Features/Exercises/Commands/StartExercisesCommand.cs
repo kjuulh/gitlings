@@ -54,7 +54,7 @@ namespace GitLings.Features.Exercises.Commands
                 await console.Output.WriteLineAsync(output.Errors.First().Message);
                 return;
             }
-            await console.Output.WriteLineAsync($"Initialized exercise: {output}");
+            await console.Output.WriteLineAsync($"Initialized exercise: {output.Value}");
             
             await exercise.Create(exercisePath, console);
         }

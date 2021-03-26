@@ -13,9 +13,10 @@ namespace GitLings.Features.Exercises
     {
         public Result<string> CreateRepository(string path)
         {
-            return Directory.Exists(path)
-                ? Fail<string>("Directory already exists")
-                : Ok(LibGit2Sharp.Repository.Init($"{path}/exercise"));
+            if (Directory.Exists($"{path}/exercise"))
+                return Fail<string>("Directory already exists");
+            
+            return Ok(LibGit2Sharp.Repository.Init($"{path}/exercise"));
             ;
         }
     }
