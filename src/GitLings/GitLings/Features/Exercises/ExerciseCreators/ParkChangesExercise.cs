@@ -41,16 +41,13 @@ git add file.txt && git commit -m ""Add file change""
 echo ""New work"" >> another-file.txt
 ");
             var file = "file.txt";
-            var repo = new Repository($"{repositoryPath}/.git");
-            using var fs = File.Create($"{repositoryPath}/{file}");
-            await fs.WriteAsync(Encoding.UTF8.GetBytes("Oh no, this file has a bug # BUG!!!!\n"));
-            fs.Close();
-            LibGit2Sharp.Commands.Stage(repo, file);
             var author = new Signature("Kasper Juul Hermansen", "contact@kjuulh.io", DateTimeOffset.Now.AddYears(3));
+            
+            var repo = new Repository($"{repositoryPath}/.git");
+            await FileUtilities.WriteToFile($"{repositoryPath}/{file}", "Oh no, this file has a bug # BUG!!!!\n");
+            LibGit2Sharp.Commands.Stage(repo, file);
             repo.Commit("Add file change", author, author);
-            using var fs2 = File.Create($"{repositoryPath}/another-file.txt");
-            await fs2.WriteAsync(Encoding.UTF8.GetBytes("Some very important change yes!"));
-            fs.Close();
+            await FileUtilities.WriteToFile($"{repositoryPath}/another-file.txt", "Some very important change yes!");
         }
 
         public async Task GetHint(int number, IConsole console)

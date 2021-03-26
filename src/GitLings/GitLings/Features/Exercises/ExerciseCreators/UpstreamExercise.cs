@@ -19,12 +19,9 @@ namespace GitLings.Features.Exercises.ExerciseCreators
             LibGit2Sharp.Commands.Fetch(repo, "upstream", new []{"main"}, new FetchOptions(), "Fetching upstream main");
             LibGit2Sharp.Commands.Checkout(repo, "2fcc1b9135e6c5c613ac2879332ff7aae0293090");
             
-            using var fs = File.AppendText($"{repositoryPath}/README.md");
-            await fs.WriteLineAsync("Some change");
-            await fs.FlushAsync();
+            await FileUtilities.WriteToFile($"{repositoryPath}/README.md", "Some change");
             LibGit2Sharp.Commands.Stage(repo, "README.md");
             repo.Commit("Add file change", author, author);
-            fs.Close();
         }
 
         private static async Task WriteText(IConsole console)

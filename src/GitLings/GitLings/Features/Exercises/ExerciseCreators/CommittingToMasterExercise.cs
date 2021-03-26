@@ -1,9 +1,8 @@
 using System;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using CliFx.Infrastructure;
 using LibGit2Sharp;
+using static GitLings.FileUtilities;
 
 namespace GitLings.Features.Exercises.ExerciseCreators
 {
@@ -40,13 +39,6 @@ $ git log
             repo.Commit("Oh no, move this commit!", author, author);
         }
 
-        private async Task WriteToFile(string path, string contents)
-        {
-            using var fs = File.OpenWrite(path);
-            await fs.WriteAsync(Encoding.UTF8.GetBytes(contents));
-            await fs.FlushAsync();
-            fs.Close();
-        }
 
         private static void WriteText(IConsole console, string file)
         {

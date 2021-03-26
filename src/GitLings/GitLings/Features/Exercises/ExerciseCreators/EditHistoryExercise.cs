@@ -18,34 +18,27 @@ namespace GitLings.Features.Exercises.ExerciseCreators
             await WriteText(console);
 
             var repo = new Repository($"{repositoryPath}/.git");
-            using var fs = File.CreateText($"{repositoryPath}/{file}");
-            
-            await fs.WriteLineAsync("Some change");
-            await fs.FlushAsync();
+
+            await FileUtilities.WriteToFile($"{repositoryPath}/{file}", "Some change");
             LibGit2Sharp.Commands.Stage(repo, file);
             repo.Commit("Add file change", author, author);
 
-            await fs.WriteLineAsync("Some change");
-            await fs.FlushAsync();
+            await FileUtilities.WriteToFile($"{repositoryPath}/{file}", "Some change");
             LibGit2Sharp.Commands.Stage(repo, file);
             repo.Commit("Add file change", author, author);
 
-            await fs.WriteLineAsync("Some very secret secret: #!@#!@#@!#!@#!@#!@$!@$");
-            await fs.FlushAsync();
+            await FileUtilities.WriteToFile($"{repositoryPath}/{file}",
+                "Some very secret secret: #!@#!@#@!#!@#!@#!@$!@$");
             LibGit2Sharp.Commands.Stage(repo, file);
             repo.Commit("some innocent commit", author, author);
 
-            await fs.WriteLineAsync("Some change");
-            await fs.FlushAsync();
+            await FileUtilities.WriteToFile($"{repositoryPath}/{file}", "Some change");
             LibGit2Sharp.Commands.Stage(repo, file);
             repo.Commit("Add file change", author, author);
 
-            await fs.WriteLineAsync("Some change");
-            await fs.FlushAsync();
+            await FileUtilities.WriteToFile($"{repositoryPath}/{file}", "Some change");
             LibGit2Sharp.Commands.Stage(repo, file);
             repo.Commit("Add file change", author, author);
-            
-            fs.Close();
         }
 
         private static async Task WriteText(IConsole console)
