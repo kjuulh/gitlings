@@ -32,10 +32,12 @@ $ git log
 
             var repo = new Repository($"{repositoryPath}/.git");
             using var fs = File.Create($"{repositoryPath}/{file}");
+            await fs.FlushAsync();
             LibGit2Sharp.Commands.Stage(repo, file);
             var author = new Signature("Kasper Juul Hermansen", "contact@kjuulh.io", DateTimeOffset.Now.AddYears(3));
             repo.Commit("Add file change", author, author);
             await fs.WriteAsync(Encoding.UTF8.GetBytes("Some change"));
+            await fs.FlushAsync();
             fs.Close();
             LibGit2Sharp.Commands.Stage(repo, file);
             repo.Commit("Oh no, move this commit!", author, author);
