@@ -47,12 +47,15 @@ namespace GitLings.Features.Exercises.Commands
 
             var exerciseLocationTuple = exerciseLocation.Value;
             var exercisePath = $"{exerciseLocationTuple.path}/exercise";
-            if (Directory.Exists(exercisePath))
-                Directory.Delete(exercisePath, true);
             
             var output = _gitProvider.CreateRepository(exerciseLocationTuple.path);
+            if (output.IsFailed)
+            {
+                await console.Output.WriteLineAsync(output.Errors.First().Message);
+                return;
+            }
             await console.Output.WriteLineAsync($"Initialized exercise: {output}");
-
+            
             await exercise.Create(exercisePath, console);
         }
     }
