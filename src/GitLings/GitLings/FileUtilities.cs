@@ -8,8 +8,8 @@ namespace GitLings
     {
         public static async Task WriteToFile(string path, string contents)
         {
-            using var fs = File.OpenWrite(path);
-            await fs.WriteAsync(Encoding.UTF8.GetBytes(contents));
+            using var fs = File.AppendText(path);
+            await fs.WriteLineAsync(contents);
             await fs.FlushAsync();
             fs.Close();
         }
