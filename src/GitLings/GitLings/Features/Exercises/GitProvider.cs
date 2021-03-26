@@ -17,7 +17,6 @@ namespace GitLings.Features.Exercises
                 return Fail<string>("Directory already exists");
             
             return Ok(LibGit2Sharp.Repository.Init($"{path}/exercise"));
-            ;
         }
     }
 }

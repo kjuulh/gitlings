@@ -31,16 +31,21 @@ $ git log
             WriteText(console, file);
 
             var repo = new Repository($"{repositoryPath}/.git");
-            using var fs = File.Create($"{repositoryPath}/{file}");
-            await fs.FlushAsync();
+            await WriteToFile($"{repositoryPath}/{file}", "");
             LibGit2Sharp.Commands.Stage(repo, file);
             var author = new Signature("Kasper Juul Hermansen", "contact@kjuulh.io", DateTimeOffset.Now.AddYears(3));
             repo.Commit("Add file change", author, author);
-            await fs.WriteAsync(Encoding.UTF8.GetBytes("Some change"));
-            await fs.FlushAsync();
-            fs.Close();
+            await WriteToFile($"{repositoryPath}/{file}", "Some change");
             LibGit2Sharp.Commands.Stage(repo, file);
             repo.Commit("Oh no, move this commit!", author, author);
+        }
+
+        private async Task WriteToFile(string path, string contents)
+        {
+            using var fs = File.OpenWrite(path);
+            await fs.WriteAsync(Encoding.UTF8.GetBytes(contents));
+            await fs.FlushAsync();
+            fs.Close();
         }
 
         private static void WriteText(IConsole console, string file)
