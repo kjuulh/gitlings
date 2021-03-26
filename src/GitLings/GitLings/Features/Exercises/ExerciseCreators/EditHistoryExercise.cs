@@ -28,7 +28,7 @@ namespace GitLings.Features.Exercises.ExerciseCreators
             repo.Commit("Add file change", author, author);
 
             await FileUtilities.WriteToFile($"{repositoryPath}/{file}",
-                "Some very secret secret: #!@#!@#@!#!@#!@#!@$!@$");
+                "Some very secret secret: asdjfashdfkj123123l12j3l12j3");
             LibGit2Sharp.Commands.Stage(repo, file);
             repo.Commit("some innocent commit", author, author);
 
